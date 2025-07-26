@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "shpii_addon:item/stormcallers_remnant"
+  }
+}

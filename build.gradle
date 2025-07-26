@@ -1,0 +1,212 @@
+plugins {
+	id 'fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Define repositories for mod dependencies only
+
+	maven {
+		name = "Modmuss"
+		url = "https://maven.modmuss50.me/"
+	}
+	maven {
+		name = "Jared" // for JEI and Patchouli
+		url = "https://maven.blamejared.com/"
+	}
+	maven {
+		name = "TerraformersMC" // for trinkets and EMI
+		url = "https://maven.terraformersmc.com/"
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url = "https://maven.ladysnake.org/releases"
+	}
+	maven {
+		name = "BuildCraft" // for LBA
+		url = "https://mod-buildcraft.com/maven"
+	}
+	maven {
+		name = "Entity Reach"
+		url = "https://maven.jamieswhiteshirt.com/libs-release/"
+	}
+	maven {
+		url = "https://jitpack.io" // for step height EAM
+	}
+	maven {
+		url = "https://maven.shedaniel.me/" // for REI
+	}
+	maven {
+		name = "ParchmentMC"
+		url = "https://maven.parchmentmc.net/"
+	}
+	maven {
+		name = "Unascribed" // for Ears
+		url = "https://repo.unascribed.com"
+		content {
+			includeGroup "com.unascribed"
+		}
+	}
+	maven {
+		name = "Modrinth" // for "Here Be No Dragons"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+	maven {
+		name = "Forge"
+		url = "https://maven.minecraftforge.net"
+	}
+	maven {
+		url = "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
+		name = "Lounode Snapshots"
+		url = "https://maven.lounode.top/snapshots"
+	}
+	maven {
+		name = "Lounode Releases"
+		url = "https://maven.lounode.top/releases"
+	}
+	maven {
+		name = "KubeJS & Dev Mods"
+		url = "https://maven.latvian.dev/releases"
+		content {
+			includeGroup "dev.latvian.mods"
+			includeGroup "dev.latvian.apps"
+		}
+	}
+	maven {
+		url = "https://maven.saps.dev/minecraft"
+		content {
+			includeGroup "dev.latvian.mods"
+			includeGroup "dev.ftb.mods"
+		}
+	}
+	maven {
+		url = "https://maven.architectury.dev/"
+	}
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"skeleton-horse-prominence-ii-addon" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+
+
+fabricApi {
+	configureDataGeneration {
+		client = true
+	}
+}
+
+dependencies {
+	// Core Minecraft setup
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// Utilities & Config
+	modImplementation("com.github.Draylar:omega-config:${project.config_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+	modImplementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tc_version}")
+	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+
+	// Cardinal Components API
+	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
+	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
+
+	// Attributes & Augmentations
+	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	modImplementation "com.github.emilyploszaj:step-height-entity-attribute:${project.step_height_entity_attribute_version}"
+	include "com.github.emilyploszaj:step-height-entity-attribute:${project.step_height_entity_attribute_version}"
+	modCompileOnly "teamreborn:energy:${project.team_reborn_energy_version}"
+	modCompileOnly "com.unascribed:ears-api:${project.unascribed_ears_version}"
+
+	// Spell system libraries
+	modImplementation include("maven.modrinth:saflib:${project.lib_version}")
+	modImplementation "maven.modrinth:spell-power:${project.sp_version}"
+	modRuntimeOnly "maven.modrinth:here-be-no-dragons:${project.be_no_dragons_version}"
+
+	// Mixins & processors
+	annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras_version}")
+
+	// UI & game mechanics
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+	// Major mods
+	modImplementation "curse.maven:mcdw-${project.minecraft_dungeon_weapons_version}"
+	modImplementation "curse.maven:archon-${project.archon_version}"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	from("LICENSE") {
+		rename { "${it}_${inputs.properties.archivesName}"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}

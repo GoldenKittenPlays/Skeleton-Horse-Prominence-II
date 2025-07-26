@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "me.goldenkitten.shpii_addon.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"ExampleMixin",
+		"RecipeManagerAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

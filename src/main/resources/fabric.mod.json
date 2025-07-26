@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "shpii_addon",
+	"version": "${version}",
+	"name": "Skeleton Horse Prominence II Addon",
+	"description": "Having trouble with finding a thunderstorm? Maybe finding a Skeleton Horse? This addon adds an item that solves that issue by adding the ability to spawn a thunderstorm and if upgraded allows the spawning of a skeleton horse during a thunderstorm.",
+	"authors": [
+		"GoldenKitten"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/goldenkittenplays"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/shpii_addon/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"me.goldenkitten.shpii_addon.SHPIIAddon"
+		],
+		"client": [
+			"me.goldenkitten.shpii_addon.SHPIIAddonClient"
+		],
+		"fabric-datagen": [
+			"me.goldenkitten.shpii_addon.SHPIIAddonDataGenerator"
+		]
+	},
+	"mixins": [
+		"shpii_addon.mixins.json",
+		{
+			"config": "shpii_addon.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

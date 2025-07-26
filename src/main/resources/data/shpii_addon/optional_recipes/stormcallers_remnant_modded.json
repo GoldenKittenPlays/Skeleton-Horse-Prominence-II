@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  #",
+        "LD ",
+        "KL "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:totem_of_undying"
+        },
+        "L": {
+            "item": "archon:thunder_staff"
+        },
+        "D": {
+            "item": "archon:diamond_mana_catalyst"
+        },
+        "K": {
+            "item": "mcdw:crossbow_lightning_harp_crossbow"
+        }
+    },
+    "result": {
+        "item": "shpii_addon:stormcallers_remnant",
+        "count": 1
+    },
+    "group": "goldenkitten"
+}

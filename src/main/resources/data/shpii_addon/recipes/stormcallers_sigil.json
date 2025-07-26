@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shpii_addon:stormcallers_remnant"
+        },
+        {
+            "item": "shpii_addon:stormcallers_remnant"
+        },
+        {
+            "item": "shpii_addon:stormcallers_remnant"
+        },
+        {
+            "item": "shpii_addon:stormcallers_remnant"
+        }
+    ],
+    "result": {
+        "item": "shpii_addon:stormcallers_sigil",
+        "count": 1
+    },
+    "group": "goldenkitten"
+}

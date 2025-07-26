@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  #",
+    "LD ",
+    "PL "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:totem_of_undying"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "P": {
+      "item": "minecraft:daylight_detector"
+    }
+  },
+  "result": {
+    "item": "shpii_addon:stormcallers_remnant",
+    "count": 1
+  },
+  "group": "goldenkitten"
+}
