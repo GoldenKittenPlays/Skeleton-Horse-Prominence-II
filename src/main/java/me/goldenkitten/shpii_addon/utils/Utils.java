@@ -37,11 +37,13 @@ public class Utils {
     ) {
         Identifier id = customRecipe.getId();
 
-        Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipesMap = accessor.getRecipes();
-        Map<Identifier, Recipe<?>> byIdMap = accessor.getRecipesById();
+        // Clone mutable copies of the recipe maps to avoid mutating immutable maps
+        Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipesMap = new HashMap<>(accessor.getRecipes());
+        Map<Identifier, Recipe<?>> byIdMap = new HashMap<>(accessor.getRecipesById());
 
-        // Ensure a crafting recipe map exists
-        Map<Identifier, Recipe<?>> craftingMap = recipesMap.computeIfAbsent(RecipeType.CRAFTING, k -> new HashMap<>());
+        // Ensure there's a mutable submap for crafting recipes
+        Map<Identifier, Recipe<?>> craftingMap =
+                new HashMap<>(recipesMap.getOrDefault(RecipeType.CRAFTING, new HashMap<>()));
 
         Recipe<?> existingRecipe = byIdMap.get(id);
 
@@ -57,9 +59,13 @@ public class Utils {
         // Inject or overwrite
         craftingMap.put(id, customRecipe);
         byIdMap.put(id, customRecipe);
+        recipesMap.put(RecipeType.CRAFTING, craftingMap);
+
+        // Reassign the full maps using accessors — this is crucial
         accessor.setRecipes(recipesMap);
         accessor.setRecipesById(byIdMap);
-        SHPIIAddon.LOGGER.info("Injected Stormcaller's Remnant recipe: {} (overwrite: {})", id, allowOverwrite);
+
+        SHPIIAddon.LOGGER.info("✅ Injected Stormcaller's Remnant recipe: {} (overwrite: {})", id, allowOverwrite);
     }
 
     public static void announce(ServerPlayerEntity sourcePlayer, double radius, String message, SoundEvent soundEvent, boolean playSound) {
