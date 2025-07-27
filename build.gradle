@@ -129,6 +129,7 @@ dependencies {
 	modImplementation("com.github.Draylar:omega-config:${project.config_version}") {
 		exclude group: "net.fabricmc.fabric-api"
 	}
+
 	modImplementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tc_version}")
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude group: "net.fabricmc.fabric-api"

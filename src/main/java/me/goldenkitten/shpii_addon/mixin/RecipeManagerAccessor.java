@@ -11,12 +11,14 @@ import java.util.Map;
 
 @Mixin(RecipeManager.class)
 public interface RecipeManagerAccessor {
+    // Read access
     @Accessor("recipes")
     Map<RecipeType<?>, Map<Identifier, Recipe<?>>> getRecipes();
 
     @Accessor("recipesById")
     Map<Identifier, Recipe<?>> getRecipesById();
 
+    // Write access — needed to commit mutations
     @Accessor("recipes")
     void setRecipes(Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes);
 

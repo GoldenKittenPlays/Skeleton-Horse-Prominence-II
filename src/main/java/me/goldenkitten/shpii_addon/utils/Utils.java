@@ -5,18 +5,12 @@ import me.goldenkitten.shpii_addon.mixin.RecipeManagerAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,13 +18,11 @@ public class Utils {
     /**
      * Injects a recipe into the RecipeManager with optional overwriting behavior.
      *
-     * @param recipeManager The recipe manager to inject into
      * @param accessor The accessor mixin for internal maps
      * @param customRecipe The recipe to inject
      * @param allowOverwrite Whether to allow overwriting an existing recipe
      */
     public static void injectSafe(
-            RecipeManager recipeManager,
             RecipeManagerAccessor accessor,
             CraftingRecipe customRecipe,
             boolean allowOverwrite
@@ -66,28 +58,6 @@ public class Utils {
         accessor.setRecipesById(byIdMap);
 
         SHPIIAddon.LOGGER.info("✅ Injected Stormcaller's Remnant recipe: {} (overwrite: {})", id, allowOverwrite);
-    }
-
-    public static void announce(ServerPlayerEntity sourcePlayer, double radius, String message, SoundEvent soundEvent, boolean playSound) {
-        try (ServerWorld world = sourcePlayer.getServerWorld()) {
-            Vec3d sourcePos = sourcePlayer.getPos();
-            if (soundEvent == null) {
-                soundEvent = SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER;
-            }
-            for (ServerPlayerEntity target : world.getPlayers()) {
-                if (target.getPos().isInRange(sourcePos, radius)) {
-                    // Styled message
-                    target.sendMessage(getLightningMessage(message), false);
-
-                    if (playSound) {
-                        // Optional sound effect
-                        target.playSound(soundEvent, 1.0F, 1.0F);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static Text getLightningMessage(String message) {

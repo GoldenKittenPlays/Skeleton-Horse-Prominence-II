@@ -5,12 +5,16 @@ import me.goldenkitten.shpii_addon.mixin.RecipeManagerAccessor;
 import me.goldenkitten.shpii_addon.utils.Utils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import org.slf4j.Logger;
@@ -29,11 +33,27 @@ public class SHPIIAddon implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> server.execute(() -> {
-            injectStormcallerRecipe(server.getRecipeManager());
-            LOGGER.info(MOD_MSG + "Injected Stormcaller’s Remnant on server tick.");
-        }));
 		ModItems.initialize();
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			injectStormcallerRecipe(server.getRecipeManager());
+			LOGGER.info("Stormcaller’s Remnant injected on server start.");
+		});
+
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ServerPlayerEntity player = handler.getPlayer();
+			Identifier advId = new Identifier("shpii_addon", "stormcallers_remnant");
+			Advancement adv = server.getAdvancementLoader().get(advId);
+			if (adv != null) {
+				AdvancementProgress progress = player.getAdvancementTracker().getProgress(adv);
+				if (!progress.isDone()) {
+					for (String criterion : progress.getUnobtainedCriteria()) {
+						player.getAdvancementTracker().grantCriterion(adv, criterion);
+					}
+				}
+			} else {
+				SHPIIAddon.LOGGER.warn("Missing advancement for recipe unlock: {}", advId);
+			}
+		});
 		LOGGER.info(MOD_MSG + MOD_ID + " initialized!");
 	}
 
@@ -61,6 +81,7 @@ public class SHPIIAddon implements ModInitializer {
 		inputs.set(3, l);
 		inputs.set(4, d);
 		inputs.set(6, kOrP);
+		inputs.set(7, l);
 
 		// Result
 		ItemStack result = new ItemStack(ModItems.STORMCALLERS_REMNANT);
@@ -76,6 +97,6 @@ public class SHPIIAddon implements ModInitializer {
 				result
 		);
 		RecipeManagerAccessor accessor = (RecipeManagerAccessor) manager;
-		Utils.injectSafe(manager, accessor, recipe, true);
+		Utils.injectSafe(accessor, recipe, true);
 	}
 }

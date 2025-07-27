@@ -1,0 +1,12 @@
+{
+  "criteria": {
+    "triggered": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "shpii_addon:stormcallers_remnant"
+    ]
+  }
+}
