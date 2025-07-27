@@ -125,6 +125,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	/*
 	// Utilities & Config
 	modImplementation("com.github.Draylar:omega-config:${project.config_version}") {
 		exclude group: "net.fabricmc.fabric-api"
@@ -162,6 +163,7 @@ dependencies {
 	// Major mods
 	modImplementation "curse.maven:mcdw-${project.minecraft_dungeon_weapons_version}"
 	modImplementation "curse.maven:archon-${project.archon_version}"
+ 	*/
 }
 
 processResources {
